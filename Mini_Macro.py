@@ -23,22 +23,49 @@ helplist = ['\\t', '\\n', '\\r', ' ', '!', '"', '#', '$', '%', '&', "'", '(',
 'up', 'volumedown', 'volumemute', 'volumeup', 'win', 'winleft', 'winright', 'yen',
 'command', 'option', 'optionleft', 'optionright']
 
-def chunks(xs, n):
-    n = max(1, n)
-    return (xs[i:i+n] for i in range(0, len(xs), n))
+cont1, cont2 = -1, -1
 
-starter = input("Please type key combination you want to simulate in format of CTRL,V or CTRL V. \nYou can use /help to show keynames : ")
+def stroke():
+    global splitted_starter
+    starter = input("Please type key combination you want to simulate in format of CTRL,V or CTRL V. \nYou can use /help to show keynames : ")
 
-if starter == "/help":
-    for i in range(0, len(helplist), 10):
-        print(helplist[i:i+10])
-    exit()
+    if starter == "/help":
+        for i in range(0, len(helplist), 10):
+            print(helplist[i:i + 10])
+        return -1
+    else:
+        splitted_starter = starter.split(",")
+
+    for i in splitted_starter:
+        if i not in helplist:
+            print(str(i), " is not available. Please select keystroke from known keys")
+            sleep(2)
+            exit()
+    return print("You have selected", splitted_starter, "as keystroke combination")
 
 
-splitted_starter = starter.split(",")
 
-for i in splitted_starter:
-    if i not in helplist:
-        print(str(i), " is not available. Please select keystroke from known keys")
-        sleep(2)
-        exit()
+
+def sim():
+    trigger = input("Please type key combination you want to trigger the keystroke. \nYou can use /help to show keynames : ")
+
+    if trigger == "/help":
+        for i in range(0, len(helplist), 10):
+            print(helplist[i:i+10])
+        return -1
+    else:
+        splitted_trigger = trigger.split(",")
+
+    for i in splitted_trigger:
+        if i not in helplist:
+            print(str(i), " is not available. Please select keystroke from known keys")
+            sleep(2)
+            exit()
+    return print("You have selected", splitted_trigger, "as keystroke trigger combination")
+
+
+while cont1 == -1:
+    cont1 = stroke()
+while cont2 == -1:
+    cont2 = sim()
+
